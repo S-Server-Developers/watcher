@@ -18,6 +18,7 @@ class watcher(commands.Cog):
         data = response.json()
         size = data['status']['size']
         embed = discord.Embed(title="EarthQuicklyの導入サーバー数", description=f"{size}サーバー\n更新:{discord.utils.format_dt(datetime.now())}", color=discord.Color.light_gray(), timestamp=datetime.now())
+        embed.set_footer(text="この情報は15分ごとに更新されます。")
         await status.edit(embed=embed)
         if size[-2:] == '00':
             await count.edit(content=f":tada:祝！{size}サーバー！:tada:")
