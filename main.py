@@ -1,11 +1,9 @@
 import discord
 from discord.ext import commands
-import mariadb
 import dotenv
 import os
 import datetime
 import traceback
-import json
 
 dotenv.load_dotenv()
 token = os.getenv('token')
