@@ -29,7 +29,7 @@ class watcher(commands.Cog):
 
     @commands.Cog.listener()
     async def on_presence_update(self, before, after: discord.Member):
-        member:discord.User = self.bot.get_user(964887498436276305)
+        member:discord.User = self.bot.get_user(935855687400054814)
         guild = self.bot.get_guild(1148956059000651806)
         if after.guild != guild:
             return
