@@ -9,6 +9,7 @@ class watcher(commands.Cog):
         self.bot = bot
         self.watcher.start()
         self.message:discord.Message = None
+        self.monitoring = False
     
     @tasks.loop(minutes=15)
     async def watcher(self):
@@ -28,16 +29,43 @@ class watcher(commands.Cog):
 
     @commands.Cog.listener()
     async def on_presence_update(self, before, after: discord.Member):
-        member:discord.User = self.bot.get_user(935855687400054814)
+        member:discord.User = self.bot.get_user(964887498436276305)
+        guild = self.bot.get_guild(1148956059000651806)
+        if after.guild != guild:
+            return
         if after.id == member.id:
             if after.status == discord.Status.offline:
-                embed = discord.Embed(title="ダウン通知", description=f"{after.display_name}がダウンしてしまいました！", color=discord.Color.red())
-                self.message = await self.bot.get_channel(1236680579454603285).send(embed=embed)
+                if self.message is None:
+                    embed = discord.Embed(title="Watcher", color=discord.Color.red(), timestamp=datetime.now())
+                    embed.add_field(name=f"<a:down:1238112292802134047>Down {after.display_name} ({discord.utils.format_dt(datetime.now(), style='R')})", value=f"{after.display_name}がダウンしてしまいました！", inline=False)
+                    embed.set_footer(text="更新日時")
+                    self.message = await self.bot.get_channel(1236680579454603285).send(embed=embed)
+                    return
+                else:
+                    return
+            elif after.status != discord.Status.offline and after.status != discord.Status.online:
+                if self.message:
+                    if not self.monitoring:
+                        embed = self.message.embeds[0]
+                        embed.add_field(name=f"<a:possible:1238112280600903710>Monitoring {after.display_name} ({discord.utils.format_dt(datetime.now(), style='R')})", value="いつもとステータスが違う気がするので、オンライン<:online:1238112276125454407>になるまで監視中です。", inline=False)
+                        embed.color = discord.Color.orange()
+                        await self.message.edit(embed=embed)
+                        self.monitoring = True
+                        return
+                    else:
+                        return
+                else:
+                    return
             else:
                 if self.message:
-                    embed = discord.Embed(title="アップ通知", description=f"{after.display_name}が復活しました！", color=discord.Color.green())
+                    embed = self.message.embeds[0]
+                    embed.add_field(name=f"<a:stable:1238112294781718680>Up ({discord.utils.format_dt(datetime.now(), style='R')})", value=f"{after.display_name}が復活しました！")
+                    embed.timestamp = datetime.now()
+                    embed.color = discord.Color.green()
                     await self.message.edit(embed=embed)
                     self.message = None
+                    self.monitoring = False
+                    return
                 else:
                     return
     
