@@ -8,6 +8,7 @@ Botを監視してくれるやつ。
 
 3.`python main.py` or `python3 main.py`
 
-Tips:環境によってはvenvが必要です。
+> [!TIP]
+> 環境によってはvenvが必要です。
 
 License: MIT License
