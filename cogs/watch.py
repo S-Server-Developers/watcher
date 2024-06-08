@@ -57,7 +57,7 @@ class watcher(commands.Cog):
                         return
                 else:
                     return
-            else:
+            elif before.status != discord.status.online and after.status == discord.Status.online:
                 if self.message:
                     embed = self.message.embeds[0]
                     embed.add_field(name=f"<a:stable:1238112294781718680>Up ({discord.utils.format_dt(datetime.now(), style='R')})", value=f"{after.display_name}が復活しました！")
