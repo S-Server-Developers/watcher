@@ -29,6 +29,10 @@ class watcher(commands.Cog):
     @commands.Cog.listener()
     async def on_reconnect(self):
         self.watcher.restart()
+
+    @commands.Cog.listener()
+    async def on_resume(self):
+        self.watcher.restart()
     
 
     @commands.Cog.listener()
